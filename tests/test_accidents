@@ -1,0 +1,53 @@
+import pytest
+import numpy as np
+from jsapy import RateResult, Rates, FrequencyRate
+
+def test_rate_result_str():
+    result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
+    assert str(result) == "123.46"
+
+def test_validate_factor_valid():
+    rates = Rates()
+    assert rates._validate_factor(1000) == 1000
+
+def test_validate_factor_invalid():
+    rates = Rates()
+    with pytest.raises(ValueError):
+        rates._validate_factor(-1000)
+    with pytest.raises(ValueError):
+        rates._validate_factor("invalid")
+
+def test_validate_input_valid():
+    rates = Rates()
+    num = np.array([1, 2, 3])
+    den = np.array([4, 5, 6])
+    rates._validate_input(num, den)
+
+def test_validate_input_invalid():
+    rates = Rates()
+    with pytest.raises(ValueError):
+        rates._validate_input(np.array([-1, 2, 3]), np.array([4, 5, 6]))
+    with pytest.raises(ValueError):
+        rates._validate_input(np.array([1, 2, 3]), np.array([0, 0, 0]))
+    with pytest.raises(TypeError):
+        rates._validate_input(np.array(["a", "b", "c"]), np.array([4, 5, 6]))
+
+def test_calculate():
+    rates = Rates()
+    num = np.array([3, 7, 10])
+    den = np.array([50000, 120000, 200000])
+    result = rates.calculate(num, den, factor=1000)
+    expected = (np.sum(num) * 1000) / np.sum(den)
+    assert pytest.approx(result, rel=1e-5) == expected
+
+def test_calculate_frequency_rate():
+    freq_rate = FrequencyRate()
+    num = np.array([3, 7, 10])
+    den = np.array([50000, 120000, 200000])
+    result = freq_rate.calculate(num, den)
+    expected_value = (np.sum(num) * 10**6) / np.sum(den)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Frequency Rate"
+    assert result.factor == 10**6
+    assert result.num_unit == "accidents"
+    assert result.den_unit == "work hours"

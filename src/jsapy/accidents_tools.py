@@ -1,4 +1,4 @@
-from .accidents import Rates, RateResult, FrequencyRate
+from .accidents import Rates, FrequencyRate
 
 def frequency_rate(num_accidents, hours_worked, factor = None):
     """
