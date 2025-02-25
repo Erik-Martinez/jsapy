@@ -2,6 +2,8 @@ import pytest
 import numpy as np
 from jsapy.accidents import basic_rate  
 
+# Test Classes (no terminado)
+
 class TestBasicRate:
     def test_basic_rate_with_numbers(self):
         "Test basic_rate with individual integer numbers."

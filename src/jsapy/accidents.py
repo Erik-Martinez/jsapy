@@ -63,7 +63,7 @@ class Rates:
 
     Attributes
     ----------
-    feat_factor : int
+    defeat_factor : int
         Default factor used in rate calculations if a factor is not
         explicitly provided. Set to 1000.
     """
@@ -72,7 +72,7 @@ class Rates:
         """
         Initialize a Rates object.
 
-        Sets the default feature factor (`feat_factor`) to 1000.
+        Sets the default feature factor (`defeat_factor`) to 1000.
         """
         
         self.defeat_factor = 1000
@@ -140,7 +140,7 @@ class Rates:
         if not np.sum(num) > 0 or not np.sum(den) > 0:
             raise ValueError("The sum of num and the sum of den values must be superior to 0.")
         
-    def basic_rate(self, num, den, factor=None):
+    def calculate(self, num, den, factor=None):
         """
         Calculate a basic rate.
 
@@ -183,27 +183,47 @@ class Rates:
         result = (np.sum(num) * factor_to_use) / np.sum(den)
         return result
     
-    def frequency_rate(self, num_accidents, hours_worked, factor = None):
+class FrequencyRate(Rates):
+    """
+    Class for calculating the frequency rate of work accidents.
+
+    This class extends the `Rates` class to specifically calculate the frequency 
+    rate, which measures the number of accidents per hours worked, scaled by a 
+    default factor of 1,000,000 unless another factor is provided.
+
+    Methods
+    -------
+    calculate(num_accidents, hours_worked, factor=None)
+        Computes the frequency rate given the number of accidents and total hours 
+        worked, using a default factor of 1,000,000 if not specified.
+
+    See Also
+    --------
+    Rates : Base class for general rate calculations.
+    RateResult : Class to store and format the calculated rate.
+    """
+
+    def calculate(self, num_accidents, hours_worked, factor=None):
         """
         Calculate the frequency rate of work accidents.
 
         The frequency rate is calculated as the number of accidents per hours
-        worked, multiplied by a scaling factor (typically 1,000,000).
+        worked, multiplied by a scaling factor (default: 1,000,000).
 
         Parameters
         ----------
         num_accidents : array_like
-            Number of accidents occurred.
+            Number of work-related accidents.
         hours_worked : array_like
             Total hours worked by employees.
         factor : numeric, optional
-            Factor to multiply the frequency rate. If None, a default factor
+            Factor to multiply the frequency rate. If None, a default factor 
             of 1,000,000 is used. Must be positive. Default is None.
 
         Returns
         -------
         RateResult
-            An object containing the calculated frequency rate and related
+            An object containing the calculated frequency rate and related 
             information.
 
         Raises
@@ -211,34 +231,33 @@ class Rates:
         ValueError
             If `factor` is not a positive numeric value (if provided).
         TypeError
-            If elements in `num_accidents` or `hours_worked` are not numeric
+            If elements in `num_accidents` or `hours_worked` are not numeric 
             (raised by `_validate_input`).
         ValueError
-            If values in `num_accidents` or `hours_worked` are not positive
+            If values in `num_accidents` or `hours_worked` are not positive 
             or if their sums are not greater than 0 (raised by `_validate_input`).
 
         See Also
         --------
-        basic_rate : Method to calculate a basic rate.
+        Rates.calculate : Method to calculate a general rate.
         RateResult : Class to store rate calculation results.
 
         Examples
         --------
-        >>> rates_calculator = Rates()
-        >>> accidents = np.array([5, 8, 12])
-        >>> hours = np.array([100000, 120000, 150000])
-        >>> freq_rate_result = rates_calculator.frequency_rate(accidents, hours)
+        >>> freq_rate_calculator = FrequencyRate()
+        >>> accidents = np.array([3, 7, 10])
+        >>> hours = np.array([50000, 120000, 200000])
+        >>> freq_rate_result = freq_rate_calculator.calculate(accidents, hours)
         >>> print(freq_rate_result)
-        67.57
+        Frequency Rate: 76.923 accidents per 1000000 work hours.
         >>> print(freq_rate_result.rate_name)
         Frequency Rate
         >>> print(freq_rate_result.factor)
         1000000
         """
-        
         factor_to_use = self._validate_factor(factor) if factor is not None else 10**6
         
-        rate_value = self.basic_rate(num_accidents, hours_worked, factor_to_use)
+        rate_value = super().calculate(num_accidents, hours_worked, factor_to_use)
         
         return RateResult(
             rate_name="Frequency Rate",
@@ -247,84 +266,4 @@ class Rates:
             num_unit="accidents",
             den_unit = "work hours"
         )
-        
-
-        
-def display(rate_result):
-    """
-    Display the rate result in a formatted string.
-
-    This function takes a `RateResult` object and prints a formatted string
-    to the console, showing the rate name, value, units, and factor.
-
-    Parameters
-    ----------
-    rate_result : RateResult
-        An object of the `RateResult` class containing the rate calculation
-        results.
-
-    Raises
-    ------
-    TypeError
-        If `rate_result` is not an instance of the `RateResult` class.
-
-    Examples
-    --------
-    >>> rate_result = RateResult("Frequency Rate", 67.57, 1000000, "accidents", "work hours")
-    >>> display(rate_result)
-    Frequency Rate: 67.570 accidents per 1000000 work hours.
-    """
-    
-    if not isinstance(rate_result, RateResult):
-        raise TypeError("Display only works with RateResult class.")
-    
-    print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per {rate_result.factor} {rate_result.den_unit}.")
-
-
-#wrapped functions  
-def frequency_rate(num_accidents, hours_worked, factor = None):
-    """
-    Calculate the accident frequency rate (independent function).
-
-    This function calculates the frequency rate of accidents based on the
-    number of accidents and hours worked. It uses the `Rates` class internally
-    to perform the calculation.
-
-    Parameters
-    ----------
-    num_accidents : numeric or array_like
-        Number of accidents occurred. Can be a single numeric value or an
-        array-like object.
-    hours_worked : numeric or array_like
-        Total hours worked by employees. Can be a single numeric value or an
-        array-like object.
-    factor : numeric, optional
-        Factor to multiply the frequency rate. If None, a default factor
-        of 1,000,000 is used in the `Rates` class. Must be positive.
-        Default is None.
-
-    Returns
-    -------
-    RateResult
-        An object of the `RateResult` class containing the calculated
-        frequency rate and related information.
-
-    See Also
-    --------
-    Rates : Class used to perform rate calculations.
-    Rates.frequency_rate : Method within the `Rates` class that performs the
-        frequency rate calculation.
-    RateResult : Class to store rate calculation results.
-
-    Examples
-    --------
-    >>> freq_rate_result = frequency_rate(15, 250000)
-    >>> print(freq_rate_result)
-    60.0
-    >>> print(freq_rate_result.rate_name)
-    Frequency Rate
-    """
-    
-    calculator = Rates()
-    return calculator.frequency_rate(num_accidents, hours_worked, factor)
-    
+          
