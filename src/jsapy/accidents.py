@@ -267,3 +267,88 @@ class FrequencyRate(Rates):
             den_unit = "work hours"
         )
           
+          
+class IncidenceRate(Rates):
+    """
+    Class for calculating the incidence rate of work accidents.
+
+    This class extends the `Rates` base class to specifically calculate the incidence 
+    rate, which measures the number of accidents per number of workers, scaled by a 
+    default factor of 100,000 unless another factor is provided.
+
+    Methods
+    -------
+    calculate(num_accidents, num_workers, factor=None)
+        Computes the incidence rate given the number of accidents and number of 
+        workers, using a default factor of 100,000 if not specified.
+
+    See Also
+    --------
+    Rates : Base class for general rate calculations.
+    RateResult : Class to store and format the calculated rate.
+    """
+    def calculate(self, num_accidents, num_workers, factor=None):
+        """
+        Calculate the incidence rate of work accidents.
+
+        The incidence rate is calculated as the number of accidents per number 
+        of workers in the reference group and period, multiplied by a scaling factor (default: 100,000).
+
+        Parameters
+        ----------
+        num_accidents : array_like
+            Number of work-related accidents.
+        num_workers : array_like
+            Number of workers exposed to risk.
+        factor : numeric, optional
+            Factor to multiply the incidence rate. If None, a default factor 
+            of 100,000 is used. Must be positive. Default is None.
+
+        Returns
+        -------
+        RateResult
+            An object containing the calculated incidence rate and related 
+            information.
+
+        Raises
+        ------
+        ValueError
+            If `factor` is not a positive numeric value (if provided).
+        TypeError
+            If elements in `num_accidents` or `num_workers` are not numeric 
+            (raised by `_validate_input`).
+        ValueError
+            If values in `num_accidents` or `num_workers` are not positive 
+            or if their sums are not greater than 0 (raised by `_validate_input`).
+
+        See Also
+        --------
+        Rates.calculate : Method to calculate a general rate.
+        RateResult : Class to store rate calculation results.
+
+        Examples
+        --------
+        >>> inc_rate_calculator = IncidenceRate()
+        >>> accidents = np.array([2, 4, 6])
+        >>> workers = np.array([100, 200, 300])
+        >>> inc_rate_result = inc_rate_calculator.calculate(accidents, workers)
+        >>> print(inc_rate_result)
+        Incidence Rate: 1333.33 accidents per 100000 number of workers.
+        >>> print(inc_rate_result.rate_name)
+        Incidence Rate
+        >>> print(inc_rate_result.factor)
+        100000
+        """
+        factor_to_use = self._validate_factor(factor) if factor is not None else 10**5
+        
+        rate_value = super().calculate(num_accidents, num_workers, factor_to_use)
+        
+        return RateResult(
+            rate_name="Incidence Rate",
+            rate_value=rate_value,
+            factor=factor_to_use,
+            num_unit="accidents",
+            den_unit="number of workers"
+        )
+    
+    

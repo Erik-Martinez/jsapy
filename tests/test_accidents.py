@@ -1,6 +1,7 @@
 import pytest
 import numpy as np
-from jsapy import RateResult, Rates, FrequencyRate
+from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate
+from jsapy.accidents_tools import frequency_rate
 
 def test_rate_result_str():
     result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
@@ -40,6 +41,7 @@ def test_calculate():
     expected = (np.sum(num) * 1000) / np.sum(den)
     assert pytest.approx(result, rel=1e-5) == expected
 
+# Frecuency rate
 def test_calculate_frequency_rate():
     freq_rate = FrequencyRate()
     num = np.array([3, 7, 10])
@@ -51,3 +53,41 @@ def test_calculate_frequency_rate():
     assert result.factor == 10**6
     assert result.num_unit == "accidents"
     assert result.den_unit == "work hours"
+    
+def test_frequency_rate_function():
+    num_accidents = np.array([3, 7, 10])
+    hours_worked = np.array([50000, 120000, 200000])
+    result = frequency_rate(num_accidents, hours_worked)
+    expected_value = (np.sum(num_accidents) * 10**6) / np.sum(hours_worked)
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Frequency Rate"
+    assert result.factor == 10**6
+    assert result.num_unit == "accidents"
+    assert result.den_unit == "work hours"
+
+
+# Incidence rate
+def test_calculate_incidence_rate():
+    inc_rate = IncidenceRate()
+    num = np.array([3, 7, 10])
+    den = np.array([100, 150, 200])
+    result = inc_rate.calculate(num, den)
+    expected_value = (np.sum(num) * 10**5) / np.sum(den)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Incidence Rate"
+    assert result.factor == 10**5
+    assert result.num_unit == "accidents"
+    assert result.den_unit == "number of workers"
+
+def test_incidence_rate_function():
+    num_accidents = np.array([3, 7, 10])
+    num_workers = np.array([100, 150, 200])
+    result = incidence_rate(num_accidents, num_workers)
+    expected_value = (np.sum(num_accidents) * 10**5) / np.sum(num_workers)
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Incidence Rate"
+    assert result.factor == 10**5
+    assert result.num_unit == "accidents"
+    assert result.den_unit == "number of workers"
