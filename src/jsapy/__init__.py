@@ -12,7 +12,7 @@ from importlib.metadata import version
 __version__ = version("jsapy")
 
 # --- Imports desde el submódulo 'accidents' ---
-from .accidents_tools import frequency_rate, incidence_rate
+from .accidents_tools import frequency_rate, incidence_rate, severity_rate
 from .tools import display
 
 
@@ -22,5 +22,6 @@ __all__ = [
     '__version__', # Añade __version__ a la lista __all__ si quieres que sea parte de la API pública
     'display', # Función importada de accidents_tools.py 
     'frequency_rate',  # Función importada de accidents_tools.py 
-    'incidence_rate' 
+    'incidence_rate',
+    'severity_rate'
 ]

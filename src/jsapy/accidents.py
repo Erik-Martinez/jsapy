@@ -187,9 +187,6 @@ class FrequencyRate(Rates):
     """
     Class for calculating the frequency rate of work accidents.
 
-    This class extends the `Rates` class to specifically calculate the frequency 
-    rate, which measures the number of accidents per hours worked, scaled by a 
-    default factor of 1,000,000 unless another factor is provided.
 
     Methods
     -------
@@ -212,9 +209,9 @@ class FrequencyRate(Rates):
 
         Parameters
         ----------
-        num_accidents : array_like
+        num_accidents : numeric or array_like
             Number of work-related accidents.
-        hours_worked : array_like
+        hours_worked : numeric or array_like
             Total hours worked by employees.
         factor : numeric, optional
             Factor to multiply the frequency rate. If None, a default factor 
@@ -266,15 +263,10 @@ class FrequencyRate(Rates):
             num_unit="accidents",
             den_unit = "work hours"
         )
-          
-          
+                   
 class IncidenceRate(Rates):
     """
     Class for calculating the incidence rate of work accidents.
-
-    This class extends the `Rates` base class to specifically calculate the incidence 
-    rate, which measures the number of accidents per number of workers, scaled by a 
-    default factor of 100,000 unless another factor is provided.
 
     Methods
     -------
@@ -296,9 +288,9 @@ class IncidenceRate(Rates):
 
         Parameters
         ----------
-        num_accidents : array_like
+        num_accidents : numeric or array_like
             Number of work-related accidents.
-        num_workers : array_like
+        num_workers : numeric or array_like
             Number of workers exposed to risk.
         factor : numeric, optional
             Factor to multiply the incidence rate. If None, a default factor 
@@ -351,4 +343,87 @@ class IncidenceRate(Rates):
             den_unit="number of workers"
         )
     
+class SeverityRate(Rates):    
+    """
+    Class for calculating the severity rate of work accidents.
+
+    Methods
+    -------
+    calculate(days_lost, hours_worked, factor=None)
+        Computes the severity rate given the number of lost work days and number of 
+        hours worked, using a default factor of 100,000 if not specified.
+
+    See Also
+    --------
+    Rates : Base class for general rate calculations.
+    RateResult : Class to store and format the calculated rate.
+    """
     
+    def calculate(self, days_lost, hours_worked, factor=None):
+        """
+        Calculate the severity rate of work accidents.
+
+        The severity rate is calculated as the the number of lost work days per total number of hours worked in the reference group and period, multiplied by a scaling factor (default: 100,000).
+
+        Parameters
+        ----------
+        days_lost : numeric or array_like
+            Number of work-related accidents.
+        hours_worked : numeric or array_like
+            Total hours worked by employees.
+        factor : numeric, optional
+            Factor to multiply the severity rate. If None, a default factor 
+            of 100,000 is used. Must be positive. Default is None.
+
+        Returns
+        -------
+        RateResult
+            An object containing the calculated severity rate and related 
+            information.
+
+        Raises
+        ------
+        ValueError
+            If `factor` is not a positive numeric value (if provided).
+        TypeError
+            If elements in `num_accidents` or `num_workers` are not numeric 
+            (raised by `_validate_input`).
+        ValueError
+            If values in `num_accidents` or `num_workers` are not positive 
+            or if their sums are not greater than 0 (raised by `_validate_input`).
+
+        See Also
+        --------
+        Rates.calculate : Method to calculate a general rate.
+        RateResult : Class to store rate calculation results.
+
+        Examples
+        --------
+        >>> severity_rate_calculator = SeverityRate()
+        >>> lost_days = np.array([5, 10, 15])
+        >>> total_hours = np.array([10000, 20000, 30000])
+        >>> severity_rate_result = severity_rate_calculator.calculate(lost_days, total_hours)
+        >>> display(severity_rate_result)
+        Severity Rate: 50.00 work days lost per 100000 work hours.
+        >>> print(severity_rate_result.rate_name)
+        Severity Rate
+        >>> print(severity_rate_result)
+        100000
+        >>> severity_rate_result_custom_factor = severity_rate_calculator.calculate(lost_days, total_hours, factor=1000)
+        >>> display(severity_rate_result_custom_factor)
+        Severity Rate: 0.50 work days lost per 1000 work hours.
+        """
+        
+        factor_to_use = self._validate_factor(factor) if factor is not None else 10**5
+        
+        rate_value = super().calculate(days_lost, hours_worked, factor_to_use)
+        
+        return RateResult(
+            rate_name="Severity Rate",
+            rate_value=rate_value,
+            factor=factor_to_use,
+            num_unit="work days lost",
+            den_unit="work hours"
+        )
+        
+        

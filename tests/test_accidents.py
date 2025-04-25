@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate
-from jsapy.accidents_tools import frequency_rate
+from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate, SeverityRate
+from jsapy.accidents_tools import frequency_rate, incidence_rate, severity_rate
 
 def test_rate_result_str():
     result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
@@ -91,3 +91,28 @@ def test_incidence_rate_function():
     assert result.factor == 10**5
     assert result.num_unit == "accidents"
     assert result.den_unit == "number of workers"
+    
+# Severity Rate
+def test_calculate_severity_rate():
+    sev_rate = SeverityRate()
+    num = np.array([5000, 10000, 20000])
+    den = np.array([50000, 120000, 200000])
+    result = sev_rate.calculate(num, den)
+    expected_value = (np.sum(num) * 10**5) / np.sum(den)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Severity Rate"
+    assert result.factor == 10**5
+    assert result.num_unit == "work days lost"
+    assert result.den_unit == "work hours"
+    
+def test_severity_rate_function():
+    lost_days = np.array([5000, 10000, 20000])
+    hours_worked = np.array([50000, 120000, 200000])
+    result = severity_rate(lost_days, hours_worked)
+    expected_value = (np.sum(lost_days) * 10**5) / np.sum(hours_worked)
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Severity Rate"
+    assert result.factor == 10**5
+    assert result.num_unit == "work days lost"
+    assert result.den_unit == "work hours"
