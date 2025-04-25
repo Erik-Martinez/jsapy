@@ -1,4 +1,4 @@
-from jsapy.accidents import FrequencyRate, IncidenceRate, SeverityRate
+from jsapy.accidents import FrequencyRate, IncidenceRate, SeverityRate, LostDaysRate
 
 def frequency_rate(num_accidents, hours_worked, factor = None):
     """
@@ -141,3 +141,7 @@ def severity_rate(days_lost, hours_worked, factor=None):
     """ 
     
     return SeverityRate().calculate(days_lost, hours_worked, factor)
+
+def lost_days_rate(num_accidents, hours_worked, days_lost):
+    
+    return LostDaysRate().calculate(num_accidents, hours_worked, days_lost)

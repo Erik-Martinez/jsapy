@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate, SeverityRate
-from jsapy.accidents_tools import frequency_rate, incidence_rate, severity_rate
+from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate, SeverityRate, LostDaysRate
+from jsapy.accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate
 
 def test_rate_result_str():
     result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
@@ -116,3 +116,47 @@ def test_severity_rate_function():
     assert result.factor == 10**5
     assert result.num_unit == "work days lost"
     assert result.den_unit == "work hours"
+    
+# Lost Days Rate
+def test_lost_days_rate_calculate():
+    lost_rate = LostDaysRate()
+    num_accidents = np.array([5, 10, 7])
+    hours_worked = np.array([100000, 200000, 150000])
+    days_lost = np.array([50, 120, 80])
+    result = lost_rate.calculate(num_accidents, hours_worked, days_lost)
+
+    total_accidents = np.sum(num_accidents)
+    total_hours = np.sum(hours_worked)
+    total_lost_days = np.sum(days_lost)
+
+    frequency_rate = (total_accidents * 10**6) / total_hours
+    severity_rate = (total_lost_days * 10**3) / total_hours
+    expected_value = (severity_rate * 10**3) / frequency_rate
+
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Lost Days Rate"
+    assert result.factor == 1
+    assert result.num_unit == "work days lost"
+    assert result.den_unit == "accident"
+    
+def test_lost_days_rate_function():
+    num_accidents = np.array([3, 8, 5])
+    hours_worked = np.array([80000, 150000, 120000])
+    days_lost = np.array([30, 90, 60])
+    result = lost_days_rate(num_accidents, hours_worked, days_lost)
+
+    total_accidents = np.sum(num_accidents)
+    total_hours = np.sum(hours_worked)
+    total_lost_days = np.sum(days_lost)
+
+    frequency_rate = (total_accidents * 10**6) / total_hours
+    severity_rate = (total_lost_days * 10**3) / total_hours
+    expected_value = (severity_rate * 10**3) / frequency_rate
+
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Lost Days Rate"
+    assert result.factor == 1
+    assert result.num_unit == "work days lost"
+    assert result.den_unit == "accident"

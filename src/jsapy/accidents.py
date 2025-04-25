@@ -342,6 +342,7 @@ class IncidenceRate(Rates):
             num_unit="accidents",
             den_unit="number of workers"
         )
+
     
 class SeverityRate(Rates):    
     """
@@ -426,4 +427,22 @@ class SeverityRate(Rates):
             den_unit="work hours"
         )
         
+class LostDaysRate(Rates):
+    
+    def calculate(self, num_accidents, hours_worked, days_lost):
         
+        factor_freq = 10**6
+        factor_sev = 10**3
+        
+        freq_rate = super().calculate(num_accidents, hours_worked,  factor_freq)
+        sev_rate = super().calculate(days_lost, hours_worked, factor_sev)
+        
+        rate_value = (sev_rate * 10**3) / freq_rate
+        
+        return RateResult(
+            rate_name="Lost Days Rate",
+            rate_value=rate_value,
+            factor=1,
+            num_unit="work days lost",
+            den_unit = "accident"
+        )
