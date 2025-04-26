@@ -1,11 +1,11 @@
 import pytest
 import numpy as np
-from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate, SeverityRate, LostDaysRate
-from jsapy.accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate
+from jsapy.accidents import RateResult, Rates, FrequencyRate, IncidenceRate, SeverityRate, LostDaysRate, SafetyRate
+from jsapy.accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate, safety_rate
 
 def test_rate_result_str():
     result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
-    assert str(result) == "123.46"
+    assert str(result) == "123.457"
 
 def test_validate_factor_valid():
     rates = Rates()
@@ -160,3 +160,49 @@ def test_lost_days_rate_function():
     assert result.factor == 1
     assert result.num_unit == "work days lost"
     assert result.den_unit == "accident"
+    
+# Safety Rate
+def test_safety_rate_calculate():
+    safety_rate = SafetyRate()
+    num_accidents = np.array([2, 3])
+    num_workers = np.array([100, 150])
+    hours_worked = np.array([40000, 60000])
+    result = safety_rate.calculate(num_accidents, num_workers, hours_worked)
+
+    factor = 10**5
+
+    total_accidents = np.sum(num_accidents)
+    total_workers = np.sum(num_workers)
+    total_hours = np.sum(hours_worked)
+
+    num_rate = (total_workers * factor) / total_accidents
+    expected_value = num_rate / total_hours
+
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Safety Rate"
+    assert result.factor == total_hours
+    assert result.num_unit == "workers"
+    assert result.den_unit == "work hours"
+    
+def test_safety_rate_function():
+    num_accidents = np.array([1, 4])
+    num_workers = np.array([80, 120])
+    hours_worked = np.array([30000, 70000])
+    result = safety_rate(num_accidents, num_workers, hours_worked)
+
+    factor = 10**5
+
+    total_accidents = np.sum(num_accidents)
+    total_workers = np.sum(num_workers)
+    total_hours = np.sum(hours_worked)
+
+    num_rate = (total_workers * factor) / total_accidents
+    expected_value = num_rate / total_hours
+
+    assert isinstance(result, RateResult)
+    assert pytest.approx(result.rate_value, rel=1e-5) == expected_value
+    assert result.rate_name == "Safety Rate"
+    assert result.factor == total_hours
+    assert result.num_unit == "workers"
+    assert result.den_unit == "work hours"

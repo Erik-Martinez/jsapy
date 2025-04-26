@@ -28,4 +28,8 @@ def display(rate_result):
     if not isinstance(rate_result, RateResult):
         raise TypeError("Display only works with RateResult class.")
     
-    print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per {rate_result.factor} {rate_result.den_unit}.")
+    
+    if rate_result.rate_name == "Safety Rate":
+        print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per each accident and {rate_result.factor} {rate_result.den_unit}.")
+    else:
+        print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per {rate_result.factor} {rate_result.den_unit}.")

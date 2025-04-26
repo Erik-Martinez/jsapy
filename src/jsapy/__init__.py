@@ -12,7 +12,7 @@ from importlib.metadata import version
 __version__ = version("jsapy")
 
 # --- Imports desde el submódulo 'accidents' ---
-from .accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate
+from .accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate, safety_rate
 from .tools import display
 
 
@@ -24,5 +24,6 @@ __all__ = [
     'frequency_rate',  # Función importada de accidents_tools.py 
     'incidence_rate',
     'severity_rate',
-    'lost_days_rate'
+    'lost_days_rate',
+    'safety_rate'
 ]
