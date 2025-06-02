@@ -7,12 +7,13 @@ Submódulos principales:
     - ... (puedes añadir aquí la descripción de otros submódulos a medida que los crees)
 """
 
-# --- Información de versión ---
+# --- Info of the version ---
 from importlib.metadata import version
 __version__ = version("jsapy")
 
-# --- Imports desde el submódulo 'accidents' ---
+# --- Imports from submodules ---
 from .accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate, safety_rate
+from .vibration_tools import vibrations_hand_arm
 from .tools import display
 
 
@@ -25,5 +26,6 @@ __all__ = [
     'incidence_rate',
     'severity_rate',
     'lost_days_rate',
-    'safety_rate'
+    'safety_rate',
+    'vibrations_hand_arm'
 ]

@@ -35,51 +35,55 @@ class VibraResult:
 
 class HandArmVibrations:
     
-    def __init__(self, action_value=2.5 , limit_value=5, unit="m/s²"):
-        self.action_value = action_value
-        self.limit_value = limit_value
-        self.unit = unit
+    def __init__(self, action_value=None, limit_value=None, unit=None):
+        self.action_value = action_value if action_value is not None else 2.5
+        self.limit_value = limit_value if limit_value is not None else 5
+        self.unit = unit if unit is not None else "m/s²"
         
     def _validate_inputs(self, id, aw, ax, ay, az, exposure_time_hours):
             
         if aw is not None and any(v is not None for v in [ax, ay, az]):
-            raise ValueError(f"{id}: Must be provided either 'aw' or 'ax, ay, az', not both.")
-        
+            raise ValueError(f"{id}- Must be provided either 'aw' or 'ax, ay, az', not both.")
         
         if aw is None:
             for val, name in zip([ax, ay, az], ['ax', 'ay', 'az']):
                 if val is None:
-                    raise ValueError(f"{id}: Missing required axis value: '{name}'")
+                    raise ValueError(f"{id}- Missing required axis value: '{name}'")
                 if not isinstance(val, (int, float)):
-                    raise TypeError(f"{id}: '{name}' must be numeric.")
+                    raise TypeError(f"{id}- '{name}' must be numeric.")
                 if val < 0:
-                    raise ValueError(f"{id}:'{name}' must be non-negative.")
+                    raise ValueError(f"{id}-'{name}' must be non-negative.")
         else:
             if not isinstance(aw, (int, float)):
-                raise TypeError(f"{id}:'aw' must be numeric.")
+                raise TypeError(f"{id}-'aw' must be numeric.")
             if aw < 0:
-                raise ValueError(f"{id}: 'aw' must be numeric.")
-        
+                raise ValueError(f"{id}- 'aw' must be numeric.")
         
         if 0 >= exposure_time_hours:
-            raise ValueError(f"{id}: Exposure time must be non-negative.")
+            raise ValueError(f"{id}-  Exposure time must be non-negative.")
         
         if exposure_time_hours > 8:
-            warnings.warn(f"{id}:Exposure time exceeds 8 hours.", UserWarning)
-            
-        
+            warnings.warn(f"{id}- Exposure time exceeds 8 hours.", UserWarning)
+                  
     def _compute_aw(self, aw, ax, ay, az):
         if aw is not None:
-            return aw_input
+            return aw
         return math.sqrt(ax**2 + ay**2 + az**2)
     
     def _compute_a8(self, aw, exposure_time_hours):
         return aw * math.sqrt(exposure_time_hours / 8)
     
-    def calculate(self, id, ax=None, ay=None, az=None, aw=None, exposure_time_hours=None):
+    def calculate_a8(self, id, ax=None, ay=None, az=None, aw=None, exposure_time_hours=None):
         self._validate_inputs(id, aw, ax, ay, az, exposure_time_hours)
         aw = self._compute_aw(aw, ax, ay, az)
         a8 = self._compute_a8(aw, exposure_time_hours)
+        
+        return a8
+        
+    def calculate_total(self, list_of_exposure):
+        list_of_exposure = np.atleast_1d(list_of_exposure)
+        
+        a8 = math.sqrt(np.sum(list_of_exposure**2))
         
         return VibraResult(
             exposure_value = a8,
