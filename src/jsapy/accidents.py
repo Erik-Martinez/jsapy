@@ -50,6 +50,23 @@ class RateResult:
             String representation of the rate value, rounded to two decimal places.
         """
         return str(np.round(self.rate_value,3))
+        
+    def to_dict(self):
+        """
+        Return the attributes of the RateResult as a dictionary.
+
+        Returns
+        -------
+        dict
+            Dictionary representation of the rate result.
+        """
+        return {
+            "rate_name": self.rate_name,
+            "rate_value": self.rate_value,
+            "factor": self.factor,
+            "numerator_unit": self.num_unit,
+            "denominator_unit": self.den_unit
+        }
 
 class Rates:
     """

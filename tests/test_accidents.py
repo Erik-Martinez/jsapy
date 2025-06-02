@@ -7,6 +7,19 @@ def test_rate_result_str():
     result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
     assert str(result) == "123.457"
 
+def test_rate_result_to_dict():
+    result = RateResult("Test Rate", 123.4567, 1000, "accidents", "work hours")
+    
+    expected = {
+        "rate_name": "Test Rate",
+        "rate_value": 123.4567,
+        "factor": 1000,
+        "numerator_unit": "accidents",
+        "denominator_unit": "work hours"
+    }
+    
+    assert result.to_dict() == expected
+
 def test_validate_factor_valid():
     rates = Rates()
     assert rates._validate_factor(1000) == 1000
