@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../jsapy_redacción"
+		},
+		{
+			"path": "../../../JSAPY_REDACCION_DEFINITIVA"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"jsapy"
+		]
+	}
+}

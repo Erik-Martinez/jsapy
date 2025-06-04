@@ -15,6 +15,36 @@ class VibraResult:
         self.exceeds_action = exposure_value > action_value
         self.exceeds_limit = exposure_value > limit_value
 
+    def __str__(self):
+        
+        return str(np.round(self.exposure_value, 3))
+    
+    def to_display(self):
+        
+        if self.exposure_type == "hand-arm":
+            text = [
+                "--- Hand-Arm Vibration Exposure Assessment ---"
+            ]
+            
+        elif self.exposure_type == "body":
+            text = [
+                "--- Complete Body Vibration Exposure Assessment ---"
+            ]
+                  
+        text.append(f"A(8) vibration value: {self.exposure_value:.3f} {self.unit}.")
+        
+        if self.exceeds_limit == True:
+            text.append(f"Danger: Exposure exceeds the **Exposure Limit Value ({self.limit_value}{self.unit})**.")
+            text.append("Immediate action is required to reduce vibration levels.")
+        elif self.exceeds_action == True:
+            text.append(f"Danger: Exposure exceeds the **Exposure Action Value ({self.limit_value}{self.unit})**.")
+            text.append("Preventive measures should be implemented to control exposure.")
+        else:
+            text.append("Exposure is below the action value.")
+            text.append("No specific action is required.")          
+            
+        return "\n".join(text)
+    
     def to_dict(self):
         return {
             "exposure_value": self.exposure_value,
@@ -25,10 +55,6 @@ class VibraResult:
             "exceeds_action": self.exceeds_action,
             "exceeds_limit": self.exceeds_limit,
         }
-
-    def __str__(self):
-        
-        return str(np.round(self.exposure_value, 3))
     
 
 

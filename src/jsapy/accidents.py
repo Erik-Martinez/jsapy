@@ -50,7 +50,15 @@ class RateResult:
             String representation of the rate value, rounded to two decimal places.
         """
         return str(np.round(self.rate_value,3))
-        
+
+    def to_display(self):
+        if self.rate_name == "Safety Rate":
+            text = [f"{self.rate_name}: {self.rate_value:.3f} {self.num_unit} per each accident and {self.factor} {self.den_unit}."]
+        else:
+            text = [f"{self.rate_name}: {self.rate_value:.3f} {self.num_unit} per {self.factor} {self.den_unit}."]
+            
+        return "\n".join(text)
+            
     def to_dict(self):
         """
         Return the attributes of the RateResult as a dictionary.

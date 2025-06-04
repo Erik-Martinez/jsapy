@@ -1,35 +1,10 @@
 from .accidents import RateResult
 
-def display(rate_result):
+def display(result):
     """
-    Display the rate result in a formatted string.
-
-    This function takes a `RateResult` object and prints a formatted string
-    to the console, showing the rate name, value, units, and factor.
-
-    Parameters
-    ----------
-    rate_result : RateResult
-        An object of the `RateResult` class containing the rate calculation
-        results.
-
-    Raises
-    ------
-    TypeError
-        If `rate_result` is not an instance of the `RateResult` class.
-
-    Examples
-    --------
-    >>> rate_result = RateResult("Frequency Rate", 67.57, 1000000, "accidents", "work hours")
-    >>> display(rate_result)
-    Frequency Rate: 67.570 accidents per 1000000 work hours.
+    Displays formatted output for result objects implementing `to_display()` method.
     """
-    
-    if not isinstance(rate_result, RateResult):
-        raise TypeError("Display only works with RateResult class.")
-    
-    
-    if rate_result.rate_name == "Safety Rate":
-        print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per each accident and {rate_result.factor} {rate_result.den_unit}.")
+    if hasattr(result, "to_display") and callable(result.to_display):
+        print(result.to_display())
     else:
-        print(f"{rate_result.rate_name}: {rate_result.rate_value:.3f} {rate_result.num_unit} per {rate_result.factor} {rate_result.den_unit}.")
+        raise TypeError("Object does not implement a callable `to_display()` method.")
