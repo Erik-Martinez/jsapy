@@ -58,7 +58,6 @@ class VibraResult:
     
 
 
-
 class HandArmVibrations:
     
     def __init__(self, action_value=None, limit_value=None, unit=None):
@@ -119,5 +118,54 @@ class HandArmVibrations:
             unit = self.unit
             )
         
+
+class CompleteBodyVibrations:
     
-                
+    def __init__(self, action_value=None, limit_value=None, unit=None):
+        self.action_value = action_value if action_value is not None else 0.5
+        self.limit_value = limit_value if limit_value is not None else 1.15
+        self.unit = unit if unit is not None else "m/s²"
+    
+    def _validate_inputs(self, id, ax, ay, az, exposure_time_hours):
+        
+        for val, name in zip([ax, ay, az], ['ax', 'ay', 'az']):
+            if val is None:
+                raise ValueError(f"{id}- Missing required axis value: '{name}'")
+            if not isinstance(val, (int, float)):
+                    raise TypeError(f"{id}- '{name}' must be numeric.")
+            if val < 0:
+                    raise ValueError(f"{id}-'{name}' must be non-negative.")
+        
+        if 0 >= exposure_time_hours:
+            raise ValueError(f"{id}-  Exposure time must be non-negative.")
+        
+        if exposure_time_hours > 8:
+            warnings.warn(f"{id}- Exposure time exceeds 8 hours.", UserWarning)
+            
+    def calculate_A_vertex(self, id, ax, ay, az, exposure_time_hours):
+        self._validate_inputs(id, ax, ay, az, exposure_time_hours)
+        Ax = 1.4*ax*math.sqrt(exposure_time_hours/8)
+        Ay = 1.4*ay*math.sqrt(exposure_time_hours/8)
+        Az = az*math.sqrt(exposure_time_hours/8)
+        
+        return Ax, Ay, Az
+    
+    def calculate_total(self, exposure_x, exposure_y, exposure_z):
+        exposure_x = np.atleast_1d(exposure_x)
+        exposure_y = np.atleast_1d(exposure_y)
+        exposure_z = np.atleast_1d(exposure_z)
+    
+        A_x = math.sqrt(np.sum(exposure_x**2))
+        A_y = math.sqrt(np.sum(exposure_y**2))
+        A_z = math.sqrt(np.sum(exposure_z**2))
+        
+        A8 = max([A_x, A_y, A_z])
+        
+        return VibraResult(
+            exposure_value = A8,
+            exposure_type= "body",
+            action_value = self.action_value,
+            limit_value = self.limit_value,
+            unit = self.unit
+        )
+    

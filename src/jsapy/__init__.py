@@ -13,19 +13,20 @@ __version__ = version("jsapy")
 
 # --- Imports from submodules ---
 from .accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate, safety_rate
-from .vibration_tools import vibrations_hand_arm
+from .vibration_tools import vibrations_hand_arm, vibrations_body
 from .tools import display
 
 
 
 
 __all__ = [
-    '__version__', # Añade __version__ a la lista __all__ si quieres que sea parte de la API pública
-    'display', # Función importada de accidents_tools.py 
-    'frequency_rate',  # Función importada de accidents_tools.py 
+    '__version__', 
+    'display', 
+    'frequency_rate',  
     'incidence_rate',
     'severity_rate',
     'lost_days_rate',
     'safety_rate',
-    'vibrations_hand_arm'
+    'vibrations_hand_arm',
+    'vibrations_body'
 ]

@@ -1,4 +1,4 @@
-from jsapy.vibrations import HandArmVibrations
+from jsapy.vibrations import HandArmVibrations, CompleteBodyVibrations
 
 
 def vibrations_hand_arm(machines, action_value=None, limit_value=None):
@@ -13,7 +13,7 @@ def vibrations_hand_arm(machines, action_value=None, limit_value=None):
             "Example:\n"
             "[{'name': 'Taladro', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},\n"
             " {'name': 'Pulidora', 'aw': 3.2, 'time': 1.5}, \n"
-            " {'aw': 2.0, 'time': 0.5}"
+            " {'aw': 2.0, 'time': 0.5}]"
         )
     
     vib = HandArmVibrations(action_value=action_value, limit_value=limit_value)
@@ -34,5 +34,40 @@ def vibrations_hand_arm(machines, action_value=None, limit_value=None):
         exposures.append(a8)
         
     return vib.calculate_total(exposures)
+ 
         
+def vibrations_body(machines, action_value=None, limit_value=None):
+    """machines = [
+    {"name": "Pistola neumática", "ax": 1.0, "ay": 1.2, "az": 0.9, "time": 3},
+    {'name': 'Taladro', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0}
+    ]"""
+    
+    if not isinstance(machines, list):
+        raise TypeError(
+            "Invalid input: 'machines' must be a list of dictionaries.\n"
+            "Example:\n"
+            "[{'name': 'Taladro', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},\n"
+            " {'name': 'Pistola neumática', 'ax': 1.0, 'ay': 1.2, 'az': 0.9, 'time': 3} \n"
+            " {'ax': 1.0, 'ay': 1.2, 'az': 0.9, 'time': 2.0}]"
+        )
+    vib = CompleteBodyVibrations(action_value=action_value, limit_value=limit_value)
+    exposure_x = []
+    exposure_y = []
+    exposure_z = []
+           
+    for idx, machine in enumerate(machines, start=1):
+        if not isinstance(machine, dict):
+            raise TypeError(f"Machine entry #{idx} must be a dictionary.")
         
+        name = machine.get("name", f"Machine {idx}")
+        ax = machine.get("ax")
+        ay = machine.get("ay")
+        az = machine.get("az")
+        time = machine.get("time")
+        
+        Ax, Ay, Az = vib.calculate_A_vertex(id=name, ax=ax, ay=ay, az=az, exposure_time_hours=time)
+        exposure_x.append(Ax)
+        exposure_y.append(Ay)
+        exposure_z.append(Az)
+        
+    return vib.calculate_total(exposure_x, exposure_y, exposure_z)
