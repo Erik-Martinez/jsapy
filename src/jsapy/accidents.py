@@ -259,13 +259,14 @@ class FrequencyRate(Rates):
 
         Examples
         --------
-        >>> from jsapy.accidents import FrequencyRate()
+        >>> from jsapy.accidents import FrequencyRate
+        >>> import numpy as np
         >>> freq_rate_calculator = FrequencyRate()
-        >>> accidents = np.array([3, 7, 10])
-        >>> hours = np.array([50000, 120000, 200000])
+        >>> accidents = [3, 7, 10]
+        >>> hours = [50000, 120000, 200000]
         >>> freq_rate_result = freq_rate_calculator.calculate(accidents, hours)
         >>> print(freq_rate_result)
-        Frequency Rate: 76.923 accidents per 1000000 work hours.
+        54.054
         >>> print(freq_rate_result.rate_name)
         Frequency Rate
         >>> print(freq_rate_result.factor)
@@ -339,13 +340,13 @@ class IncidenceRate(Rates):
 
         Examples
         --------
-        >>> from jsapy.accidents import IncidenceRate()
+        >>> from jsapy.accidents import IncidenceRate
         >>> inc_rate_calculator = IncidenceRate()
-        >>> accidents = np.array([2, 4, 6])
-        >>> workers = np.array([100, 200, 300])
+        >>> accidents = [2, 4, 6]
+        >>> workers = [100, 200, 300]
         >>> inc_rate_result = inc_rate_calculator.calculate(accidents, workers)
         >>> print(inc_rate_result)
-        Incidence Rate: 1333.33 accidents per 100000 number of workers.
+        2000.0
         >>> print(inc_rate_result.rate_name)
         Incidence Rate
         >>> print(inc_rate_result.factor)
@@ -418,20 +419,18 @@ class SeverityRate(Rates):
 
         Examples
         --------
-        >>> from jsapy.accidents import SeverityRate()
+        >>> from jsapy.accidents import SeverityRate
         >>> severity_rate_calculator = SeverityRate()
-        >>> lost_days = np.array([5, 10, 15])
-        >>> total_hours = np.array([10000, 20000, 30000])
+        >>> lost_days = [5, 10, 15]
+        >>> total_hours = [10000, 20000, 30000]
         >>> severity_rate_result = severity_rate_calculator.calculate(lost_days, total_hours)
-        >>> display(severity_rate_result)
-        Severity Rate: 50.00 work days lost per 100000 work hours.
         >>> print(severity_rate_result.rate_name)
         Severity Rate
         >>> print(severity_rate_result)
-        100000
+        50.0
         >>> severity_rate_result_custom_factor = severity_rate_calculator.calculate(lost_days, total_hours, factor=1000)
-        >>> display(severity_rate_result_custom_factor)
-        Severity Rate: 0.50 work days lost per 1000 work hours.
+        >>> print(severity_rate_result_custom_factor)
+        0.5
         """
         
         factor_to_use = super()._validate_factor(factor) if factor is not None else 10**5
@@ -502,14 +501,12 @@ class LostDaysRate(Rates):
 
         Examples
         --------
-        >>> from jsapy.accidents import LostDaysRate()
+        >>> from jsapy.accidents import LostDaysRate
         >>> lost_days_rate_calculator = LostDaysRate()
         >>> accidents = [3, 2]
         >>> hours = [50000, 60000]
         >>> lost_days = [45, 30]
         >>> result = lost_days_rate_calculator.calculate(accidents, hours, lost_days)
-        >>> display(result)
-        Lost Days Rate: 15.000 work days lost per 1 accident.
         >>> print(result)
         15.0
         """
@@ -599,8 +596,6 @@ class SafetyRate(Rates):
         >>> workers = [100, 150]
         >>> hours = [40000, 60000]
         >>> result = safety_rate_calculator.calculate(accidents, workers, hours)
-        >>> display(result)
-        Safety Rate: 50.000 workers per each accident and 100000 work hours.
         >>> print(result)
         50.0
         """
