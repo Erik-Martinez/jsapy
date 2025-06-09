@@ -311,6 +311,7 @@ class HandArmVibrations:
         ValueError
             If input array contains invalid values.
         """
+        
         list_of_exposure = np.atleast_1d(list_of_exposure)
         
         a8 = math.sqrt(np.sum(list_of_exposure**2))

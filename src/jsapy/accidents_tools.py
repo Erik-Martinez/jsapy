@@ -36,13 +36,9 @@ def frequency_rate(num_accidents, hours_worked, factor = None):
 
     Examples
     --------
-    Calculate the frequency rate for a single value:
     >>> import jsapy as jsa
     >>> print(jsa.frequency_rate(15, 250000))
     60.0
-
-    Calculate the frequency rate for multiple values (arrays):
-    >>> import jsapy as jsa
     >>> jsa.display(jsa.frequency_rate([3, 7, 10], [50000, 120000, 200000]))
     Frequency Rate: 54.054 accidents per 1000000 work hours.
     """
@@ -84,13 +80,10 @@ def incidence_rate(num_accidents, num_workers, factor=None):
 
     Examples
     --------
-    Calculate the incidence rate for a single value:
     >>> import jsapy as jsa
     >>> print(jsa.incidence_rate(15, 500))
     3000.0
 
-    Calculate the incidence rate for multiple values (arrays):
-    >>> import jsapy as jsa
     >>> jsa.display(jsa.incidence_rate([3, 7, 10], [100, 150, 200]))
     Incidence Rate: 4444.444 accidents per 100000 number of workers.
     """
@@ -135,13 +128,9 @@ def severity_rate(days_lost, hours_worked, factor=None):
 
     Examples
     --------    
-    Calculate the severity rate for a single value:
     >>> import jsapy as jsa
     >>> print(jsa.severity_rate(20, 100000))
     20.0
-    
-    Calculate the severity rate for multiple values (arrays):
-    >>> import jsapy as jsa
     >>> jsa.display(jsa.severity_rate([5000, 10000, 20000], [50000, 120000, 200000]))
     Severity Rate: 9459.459 work days lost per 100000 work hours.
     """ 
@@ -185,13 +174,9 @@ def lost_days_rate(num_accidents, hours_worked, days_lost):
 
     Examples
     --------
-    Calculate the lost days rate for a single set of values:
     >>> import jsapy as jsa
     >>> print(jsa.lost_days_rate(5, 100000, 50))
     10.0
-
-    Calculate the lost days rate for multiple groups (arrays):
-    >>> import jsapy as jsa
     >>> jsa.display(jsa.lost_days_rate([5, 10], [100000, 200000], [50, 120]))
     Lost Days Rate: 11.333 work days lost per 1 accident.
     """
@@ -237,13 +222,9 @@ def safety_rate(num_accidents, num_workers, hours_worked, factor=None):
 
     Examples
     --------
-    Calculate the safety rate for a single set of values:
     >>> import jsapy as jsa
     >>> print(jsa.safety_rate(10, 500, 200000))
     25
-
-    Calculate the safety rate for multiple groups (arrays):
-    >>> import jsapy as jsa
     >>> jsa.display(jsa.safety_rate([10, 5], [500, 300], [200000, 150000]))
     Safety Rate: 15.238 workers per each accident and 100000 work hours.
     """

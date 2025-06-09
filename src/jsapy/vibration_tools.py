@@ -34,6 +34,13 @@ def vibrations_hand_arm(machines, action_value=None, limit_value=None):
         - `name` : str, optional
             Name or identifier of the machine. If not provided, a default name
             like "Machine 1", "Machine 2", etc., is assigned automatically.
+            
+        Example:
+        [
+            {'name': 'Drill', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},
+            {'name': 'Grinder', 'aw': 3.2, 'time': 1.5},
+            " {'aw': 2.0, 'time': 0.5}
+        ]
 
         All numeric values must be non-negative. Exposure time must be greater
         than zero.
