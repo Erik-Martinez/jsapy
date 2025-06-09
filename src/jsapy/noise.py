@@ -46,10 +46,11 @@ class NoiseResult:
 
     def to_dict(self):
         return {
-            "laeq_d": self.laeq_d,
-            "protected_laeq_d": self.protected_exposure_value,
+            "exposure_value": self.exposure_value,
+            "protected_exposure_value": self.protected_exposure_value,
             "with_hearing_protection": self.with_hearing_protection,
-            "action_value": self.action_value,
+            "inf_action_value": self.inf_action_value,
+            "sup_action_value": self.sup_action_value,
             "limit_value": self.limit_value,
             "exceeds_inf_action": self.exceeds_inf_action,
             "exceeds_sup_action": self.exceeds_sup_action,
