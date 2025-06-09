@@ -84,8 +84,8 @@ def vibrations_hand_arm(machines, action_value=None, limit_value=None):
         raise TypeError(
             "Invalid input: 'machines' must be a list of dictionaries.\n"
             "Example:\n"
-            "[{'name': 'Taladro', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},\n"
-            " {'name': 'Pulidora', 'aw': 3.2, 'time': 1.5}, \n"
+            "[{'name': 'Drill', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},\n"
+            " {'name': 'Grinder', 'aw': 3.2, 'time': 1.5}, \n"
             " {'aw': 2.0, 'time': 0.5}]"
         )
     
@@ -187,7 +187,7 @@ def vibrations_body(machines, action_value=None, limit_value=None):
             "Invalid input: 'machines' must be a list of dictionaries.\n"
             "Example:\n"
             "[{'name': 'Compactor', 'ax': 2.0, 'ay': 1.5, 'az': 1.0, 'time': 2.0},\n"
-            " {'name': 'Forklift', 'ax': 1.0, 'ay': 1.2, 'az': 0.9, 'time': 3} \n"
+            " {'name': 'Forklift', 'ax': 1.0, 'ay': 1.2, 'az': 0.9, 'time': 3}, \n"
             " {'ax': 1.0, 'ay': 1.2, 'az': 0.9, 'time': 2.0}]"
         )
         

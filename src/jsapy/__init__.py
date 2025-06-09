@@ -36,6 +36,7 @@ __version__ = version("jsapy")
 # --- Imports from submodules ---
 from .accidents_tools import frequency_rate, incidence_rate, severity_rate, lost_days_rate, safety_rate
 from .vibration_tools import vibrations_hand_arm, vibrations_body
+from .noise_tools import noise_exposure
 from .tools import display
 
 
@@ -50,5 +51,6 @@ __all__ = [
     'lost_days_rate',
     'safety_rate',
     'vibrations_hand_arm',
-    'vibrations_body'
+    'vibrations_body',
+    'noise_exposure'
 ]
