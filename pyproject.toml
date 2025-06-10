@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jsapy"
-version = "0.1.0"
+version = "1.0.0"
 description = "JSAPY (Job Safety Analysis in ppython) is a package with tools for occupational risk prevention."
 authors = ["Erik Martínez Sixto"]
 license = "MIT"
