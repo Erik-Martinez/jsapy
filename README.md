@@ -1,16 +1,22 @@
-# jsapy
+# JASPY (Job Safety Analysis in Python)
 
-JSAPY (Job Safety Analysis in ppython) is a package with tools for occupational risk prevention.
+JSAPY is a Python package designed to streamline occupational risk analysis, providing specialized tools for workplace safety professionals and researchers.
+
+## Key Features
+
+  - Accident Analysis: Statistical tools for workplace accidents evaluation.
+  - Vibration Assessment: Hand-arm and whole-body vibration exposure calculations
+  - Noise Exposure: Workplace noise level analysis.
 
 ## Installation
-
+You can install jsapy directly from GitHub using pip:
 ```bash
-$ pip install jsapy
+$ pip install git+https://github.com/Erik-Martinez/jsapy.git
 ```
 
-## Usage
+## Documentation
 
-- TODO
+Full documentation available at: https://jsapy.readthedocs.io/en/latest/#
 
 ## Contributing
 
