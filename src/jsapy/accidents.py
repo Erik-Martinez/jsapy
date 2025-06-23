@@ -157,7 +157,7 @@ class Rates:
             raise TypeError("All elements in 'den' must be numeric.")
         if not np.all(num >= 0) or not np.all(den>=0):
             raise ValueError("All values must be positive.")
-        if not np.sum(num) > 0 or not np.sum(den) > 0:
+        if not np.sum(den) > 0:
             raise ValueError("The sum of num and the sum of den values must be superior to 0.")
         
     def calculate(self, num, den, factor=None):
