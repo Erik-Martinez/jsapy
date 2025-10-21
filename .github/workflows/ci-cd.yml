@@ -27,8 +27,8 @@ jobs:
       run: poetry run pytest tests/ --cov=jsapy --cov-report=xml
     
     - name: Use Codecov to track coverage
-        uses: codecov/codecov-action@v5
-        with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            files: ./coverage.xml   # coverage report
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml   # coverage report
     
