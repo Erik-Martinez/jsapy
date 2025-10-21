@@ -31,4 +31,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml   # coverage report
+    - name: Build documentation
+      run: poetry run make html --directory docs/
     
